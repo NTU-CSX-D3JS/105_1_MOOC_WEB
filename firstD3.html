@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>First SVG test</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+</head>
+<body>
+	<svg id="clock"></svg>
+	<p id="time"></p>
+	<script >
+Math.radians = function(degrees) {
+  return degrees * Math.PI / 180;
+};
+
+var L = 500,
+  hL = L / 2
+
+container = d3.select("#clock")
+  .attr("width", L)
+  .attr("height", L)
+
+container.append("circle")
+  .attr("cx", hL)
+  .attr("cy", hL)
+  .attr("r", hL - 10)
+  .attr("fill", "yellow")
+
+var arr = Array.apply(null, {
+  length: 12
+}).map(Number.call, Number)
+arr[0] = 12
+
+container.selectAll("text")
+  .data(arr).enter()
+  .append("text")
+  .attr("x", function(x) {
+    return hL + (hL - 30) * Math.cos(Math.radians(90 - 30 * x))
+  })
+  .attr("y", function(x) {
+    return hL - (hL - 30) * Math.sin(Math.radians(90 - 30 * x))
+  })
+  .text(function(x) {
+    return x
+  })
+  .attr("dx", "-.5em")
+
+container.append("circle")
+  .attr("cx", hL)
+  .attr("cy", hL)
+  .attr("r", 10)
+  .attr("fill", "red")
+
+function transitionGo(it){ 
+    if(animation){
+        return it.transition()
+            .duration(1000).ease(d3.easeLinear);
+    }
+    else{
+        return it;
+    }
+}
+
+var timeChange = function(lines,t=1000) {
+  var nowtime = container.selectAll("line")
+    .data(lines)
+
+  var sel = nowtime.enter()
+    .append("line")
+    .merge(nowtime)
+  if(t!=0){sel = sel.transition().duration(t).ease(d3.easeLinear)}
+  sel.attr("x1", hL)
+    .attr("y1", hL)
+    .attr("x2", function(x) {
+      return hL + (hL - x.long) * Math.cos(Math.radians(90 - x.angle))
+    })
+    .attr("y2", function(x) {
+      return hL - (hL - x.long) * Math.sin(Math.radians(90 - x.angle))
+    })
+    .attr("stroke-width", function(x) {
+      return x.width
+    })
+    .attr("stroke", "black")
+}
+
+
+var lines = [{
+  width: 2,
+  long: 40,
+  angle: 0
+}, {
+  width: 4,
+  long: 60,
+  angle: 0
+}, {
+  width: 6,
+  long: 100,
+  angle: 0
+}]
+
+timeChange(lines,0)
+
+var getDate = function() {
+  var date = new Date()
+  var t = {}
+  t.h = date.getHours()
+  t.m = date.getMinutes()
+  t.s = date.getSeconds()
+
+  lines[0].angle = t.s*6
+  lines[1].angle = t.m*6+t.s*0.1
+  lines[2].angle = (t.h%12)*30+t.m/2+t.s/600
+
+  timeChange(lines,1000)
+     
+  document.getElementById("time").innerHTML = t.h + ":" + t.m + ":" + t.s
+  setTimeout(getDate,100)
+}
+getDate()
+
+
+
+
+	</script>
+	
+</body>
+
+</html>
