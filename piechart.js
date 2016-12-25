@@ -15,7 +15,7 @@
 // );
 // }
 
-var jamestailiu = function(where){
+
 var pie = new d3pie("pieChart", {
 	"header": {
 		"title": {
@@ -138,4 +138,3 @@ var pie = new d3pie("pieChart", {
 		}
 	}
 });
-}
