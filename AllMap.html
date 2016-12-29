@@ -1,18 +1,17 @@
-<!-- The icon is from http://www.flaticon.com/free-icon/handyman-tools_69886#term=work&page=1&position=33 -->
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
-     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
-     <script src="https://googlemaps.github.io/js-info-bubble/src/infobubble.js"></script>
+      <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+      <script src="https://googlemaps.github.io/js-info-bubble/src/infobubble.js"></script>
+      <script src="./js/jquery-sidebar.min.js"></script>
+      <link rel="stylesheet" href="./css/gmaps-sidebar.min.css" />
+      <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
 #map {
   height: 100%;
 }
-/* Optional: Makes the sample page fill the window. */
 html, body {
   height: 100%;
   margin: 0;
@@ -21,27 +20,58 @@ html, body {
     </style>
   </head>
   <body>
-  <h1 style="text-align:center"></h1>
-  <div>
-    <form id="myselect">
-      Undefined :<input type="checkbox" id="novalue" checked=false>
-      <div>
-        HourLow:  <input type="number" id="hourlow"  value=0 >
-        HourHigh: <input type="number" id="hourhigh" value='2147483647' >
+  <div id="map" class="sidebar-map"></div>
+  <div id="sidebar" class="sidebar collapsed">
+    <!-- Nav tabs -->
+    <div class="sidebar-tabs">
+      <ul role="tablist">
+        <li><a href="#filter"      role="tab"><i class="fa fa-filter"   ></i></a></li>
+        <li><a href="./index.html" role="tab"><i class="fa fa-home"     ></i></a></li>
+      </ul>
+
+      <ul role="tablist">
+        <li><a href="#copy" role="tab"><i class="fa fa-creative-commons"></i></a></li>
+      </ul>
+    </div>
+
+    <!-- Tab panes -->
+    <div class="sidebar-content">
+      <div class="sidebar-pane" id="filter">
+        <h1 class="sidebar-header">
+          薪水篩選
+          <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+        </h1>
+        <form id="myselect">
+          <ul>
+            <li>無面議  :<input type="checkbox" id="novalue" checked=false></li>
+            <li>時薪下限:<input type="number" id="hourlow"  value=0 ></li>
+            <li>時薪上限:<input type="number" id="hourhigh" value='2147483647' ></li>
+            <li>日薪下限:<input type="number" id="daylow"   value=0 ></li>
+            <li>日薪上限:<input type="number" id="dayhigh"  value='2147483647' ></li>
+            <li>月薪下限:<input type="number" id="monthlow" value=0 ></li>
+            <li>月薪上限:<input type="number" id="monthhigh"value='2147483647' ></li>
+            <input type="button" onClick="selectSet()" value="確認修改">
+          </ul>
+          <!-- be careful for wrong input -->
+        </form>
       </div>
-      <div>
-        DayLow:   <input type="number" id="daylow"   value=0 >
-        DayHigh:  <input type="number" id="dayhigh"  value='2147483647' >
+      <div class="sidebar-pane" id="copy">
+        <h1 class="sidebar-header">
+          Creative Commons
+          <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+        </h1>
+        <img src="work.svg" style="width:100px"/>
+        <div>Icons made by <a href="http://www.flaticon.com/authors/icomoon" title="Icomoon">Icomoon</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+        <img src="home.svg" style="width:100px"/>
+        <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+        <p> 全台各鄉鎮區行政區界及範圍 </p>
+        <a href="https://gist-map.motc.gov.tw/Complex/MapTopic" target="_blank">交通部開放資料</a>
+        <p> Google map sidebar </p>
+        <a href="https://github.com/Turbo87/sidebar-v2" target="_blank"><i class="fa fa-github fa-6x"></i></a>
+
       </div>
-      <div>
-        MonthLow: <input type="number" id="monthlow" value=0 >
-        MonthHigh:<input type="number" id="monthhigh"value='2147483647' >
-      </div>
-      <input type="button" onClick="selectSet()" value="Submit">
-      <!-- be careful for wrong input -->
-    </form>
+    </div>
   </div>
-  <div id="map"></div>
   <script>
 var map;
 var csvdata;
@@ -49,13 +79,14 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 14,
     center: {lat: 25.044444, lng: 121.5234511},
-    mapTypeId: 'terrain'
   });
 
   areaDraw()
 }
 
 function initRead(){
+  var sidebar = $('#sidebar').sidebar();
+  console.log(sidebar)
   selectSet()
   $.get('./data/518_Taipei_ok.csv', function(data) {
       csvdata = $.csv.toObjects(data)
@@ -96,7 +127,6 @@ function areaDraw(){
     }
   });
 }
-
 
 function moneyStr(a){
   return a['薪資待遇']
@@ -195,10 +225,9 @@ function workMark(name) {
   })
 }
     </script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDePj2nW03TgZAQK2G95OQFv3JMGHMfvxo&libraries=visualization&callback=initRead">
-    </script>
-<div>Icons made by <a href="http://www.flaticon.com/authors/icomoon" title="Icomoon">Icomoon</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-<div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDePj2nW03TgZAQK2G95OQFv3JMGHMfvxo&libraries=visualization&callback=initRead"> </script>
+
+
   </body>
 </html>
 
