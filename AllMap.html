@@ -1,63 +1,139 @@
 <!DOCTYPE html>
 <html>
   <head>
-	<meta charset="UTF-8">
-	 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-	 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+    <meta charset="UTF-8">
+     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+     <script src="https://googlemaps.github.io/js-info-bubble/src/infobubble.js"></script>
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
-      #map {
-        height: 100%;
-      }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
+#map {
+  height: 100%;
+}
+/* Optional: Makes the sample page fill the window. */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
     </style>
   </head>
   <body>
   <h1 style="text-align:center"></h1>
     <div id="map"></div>
     <script>
-      var map;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 14,
-          center: {lat: 25.044444, lng: 121.5234511},
-          mapTypeId: 'terrain'
-        });
+var map;
+var csvdata;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 14,
+    center: {lat: 25.044444, lng: 121.5234511},
+    mapTypeId: 'terrain'
+  });
 
-		 map.data.loadGeoJson(
-            './data/MapLines.json');
+  areaDraw()
+}
 
-		$.get('./data/map_Taipei.csv', function(data) {
-			var d =  $.csv.toObjects(data);
-			eqfeed_callback(d)
-		},"text")
+function initRead(){
+  $.get('./data/518_Taipei_ok.csv', function(data) {
+      csvdata = $.csv.toObjects(data)
+      initMap()
+  },"text")
+}
 
-      }
+var area_click = {}
+function areaDraw(){
+  map.data.loadGeoJson( './data/MapLines.json');
 
-      function eqfeed_callback(results) {
-        var heatmapData = [];
-        for (var i = 0; i < results.length; i++) {
-          var result= results[i]
-			  var latlng = new google.maps.LatLng(result.lng, result.lat)
-			  var Weightlatlng= {location: latlng, weight: Math.log(1*result.money)}
-          heatmapData.push(Weightlatlng);
-        }
-        var heatmap = new google.maps.visualization.HeatmapLayer({
-          data: heatmapData,
-		  radius: 50,
-          dissipating: true,
-          map: map
-        });
-      }
+  map.data.setStyle(function(feature) {
+    var dc = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#e377c2', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
+    return {
+      fillColor: dc[feature.f.townid%10],
+      fillOpacity: 0.2,
+      strokeWeight: 0.5
+    }
+  });
+  map.data.addListener('mouseover', function(event) {
+    map.data.overrideStyle(event.feature, {strokeWeight: 8});
+  });
+
+  map.data.addListener('mouseout', function(event) {
+    map.data.overrideStyle(event.feature, {strokeWeight: .5});
+  });
+  map.data.addListener('click', function(event) {
+    name = event.feature.f.townname
+    if( area_click[name] ){
+      map.data.overrideStyle(event.feature, {fillOpacity: 0.2});
+      delMark(name)
+      delete area_click[name]
+    }
+    else{
+      map.data.overrideStyle(event.feature, {fillOpacity: 0.8});
+      area_click[name] = []
+      workMark(name)
+    }
+  });
+}
+
+
+function moneyStr(a){
+  return a['薪資待遇']
+}
+
+var preWindow = false
+var t = 100;
+function delMark(name){
+  area_click[name].forEach( function(marker){
+    marker.setMap(null);
+  })
+}
+
+function workMark(name) {
+  t=100;
+  var heatmapData = [];
+  csvdata.forEach( function(result){
+    if(result.lng == 'NA')
+      return ;
+    if(result.section_name+"區" != name) 
+      return ;
+    if(--t<0) //test
+      return ;
+    var latlng = new google.maps.LatLng(result.lng, result.lat)
+    var marker = new google.maps.Marker({
+      position: latlng,
+      map: map,
+    });
+    area_click[name].push(marker)
+    var infowindow = new InfoBubble({
+      map: map,
+      content: "<div><h3>"+result.title+"</h3>"+
+        "<h4>"+moneyStr(result)+"</h4>" + 
+        "<a target='_blank' href='"+result.URL+"'>518_LINK</a>"+
+        "</div>",
+      position: latlng,
+      shadowStyle: 1,
+      padding: 10,
+      borderRadius: 10,
+      arrowSize: 10,
+      borderWidth: 1,
+      borderColor: '#2c2c2c',
+      backgroundColor: 'rgba(255,255,255,0.87)',
+      disableAutoPan: true,
+      arrowPosition: 30,
+      arrowStyle: 1,
+      opacity: 0.7
+    });
+    marker.addListener('click', function() {
+      infowindow.open(map, marker);
+      if(preWindow != false)
+        preWindow.close()
+      preWindow = infowindow
+    });
+  })
+}
     </script>
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDePj2nW03TgZAQK2G95OQFv3JMGHMfvxo&libraries=visualization&callback=initMap">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDePj2nW03TgZAQK2G95OQFv3JMGHMfvxo&libraries=visualization&callback=initRead">
     </script>
   </body>
 </html>
