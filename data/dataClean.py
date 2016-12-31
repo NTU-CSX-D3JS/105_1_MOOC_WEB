@@ -61,20 +61,20 @@ def setMoney(d):
         dic["monthhigh"] = fmoney[1]
     elif re.match(r"時薪 NTD \d+元以上",money):
         fmoney = re.findall(r"時薪 NTD (\d+)元以上",money)[0]
-        dic["hourlow"] = fmoney[0]
+        dic["hourlow"] = fmoney
         dic["hourhigh"] = "+"
     elif re.match(r"日薪 NTD \d+元以上",money):
         fmoney = re.findall(r"日薪 NTD (\d+)元以上",money)[0]
-        dic["daylow"] = fmoney[0]
+        dic["daylow"] = fmoney
         dic["dayhigh"] = "+"
     elif re.match(r"月薪 NTD \d+元以上",money):
         fmoney = re.findall(r"月薪 NTD (\d+)元以上",money)[0]
-        dic["monthlow"] = fmoney[0]
+        dic["monthlow"] = fmoney
         dic["monthhigh"] = "+"
     elif re.match(r"日薪 NTD \d+元以下",money):
         fmoney = re.findall(r"日薪 NTD (\d+)元以下",money)[0]
         dic["daylow"] = "+"
-        dic["dayhigh"] = fmoney[0]
+        dic["dayhigh"] = fmoney
     else:
         #re.match(r"週薪 NTD \d+元以上",money) or re.match(r"年薪 NTD \d+至\d+元",money): # few
         if money not in ["依公司規定","面議"]:

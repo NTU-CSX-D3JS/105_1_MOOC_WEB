@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="./js/518_salary.js"></script>
+</head>
+<body>
+	<h1>518工作 最低時薪統計圖</h1>
+	<div id="hour_salary"></div>
+	<h1>518工作 最低日薪統計圖</h1>
+	<div id="day_salary"></div>
+	<h1>518工作 最低月薪統計圖</h1>
+	<div id="month_salary"></div>
+	<script >
+salary_518("#hour_salary","hour",10)
+salary_518("#day_salary","day",100)
+salary_518("#month_salary","month",2000)
+	</script>
+</body>
+</html>
