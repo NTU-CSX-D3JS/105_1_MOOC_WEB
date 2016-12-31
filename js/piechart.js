@@ -88,6 +88,7 @@ setPie = function(name,arr){
 			},
 			"mainLabel": {
 				"font": "exo",
+				"color": "#ffffff",
 				"fontSize": 12
 			},
 			"percentage": {
