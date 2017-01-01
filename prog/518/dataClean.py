@@ -22,8 +22,8 @@ def setMap(d):
     dic = {"lng":"NA","lat":"NA"}
     if d['Map'].find(',')!=-1:
         mapstr = d['Map'].split(',')
-        dic['lng'] = mapstr[0]
-        dic['lat'] = mapstr[1]
+        dic['lat'] = mapstr[0]
+        dic['lng'] = mapstr[1]
     d.update(dic)
 
 def setTitle(d):
@@ -83,7 +83,7 @@ def setMoney(d):
 
 
 #header
-fieldnames = ['title','URL','address', 'section_name', 'region_name','lng','lat',"hourlow","hourhigh","daylow","dayhigh","monthlow","monthhigh"]
+fieldnames = ['title','URL','address', 'section_name', 'region_name','lng','lat',"hourlow","hourhigh","daylow","dayhigh","monthlow","monthhigh","薪資待遇"]
 
 writer = csv.DictWriter(open("518_Taipei_ok.csv","w"), fieldnames=fieldnames)
 writer.writeheader()

@@ -60,21 +60,22 @@ html, body {
           Creative Commons
           <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
         </h1>
-        <img src="work.svg" style="width:100px"/>
+        <img src="./img/work.svg" style="width:100px"/>
         <div>Icons made by <a href="http://www.flaticon.com/authors/icomoon" title="Icomoon">Icomoon</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-        <img src="home.svg" style="width:100px"/>
+        <img src="./img/home.svg" style="width:100px"/>
         <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
         <p> 全台各鄉鎮區行政區界及範圍 </p>
         <a href="https://gist-map.motc.gov.tw/Complex/MapTopic" target="_blank">交通部開放資料</a>
         <p> Google map sidebar </p>
-        <a href="https://github.com/Turbo87/sidebar-v2" target="_blank"><i class="fa fa-github fa-6x"></i></a>
+        <a href="https://github.com/Turbo87/sidebar-v2" target="_blank"><i class="fa fa-github fa-5x"></i></a>
 
       </div>
     </div>
   </div>
   <script>
 var map;
-var csvdata;
+var workdata, homedata;
+
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 14,
@@ -89,8 +90,11 @@ function initRead(){
   console.log(sidebar)
   selectSet()
   $.get('./data/518_Taipei_ok.csv', function(data) {
-      csvdata = $.csv.toObjects(data)
+    workdata = $.csv.toObjects(data)
+    $.get('./data/591_Taipei_ok.csv', function(data) {
+      homedata = $.csv.toObjects(data)
       initMap()
+    },"text")
   },"text")
 }
 
@@ -124,6 +128,7 @@ function areaDraw(){
       map.data.overrideStyle(event.feature, {fillOpacity: 0.8});
       area_click[name] = []
       workMark(name)
+      homeMark(name)
     }
   });
 }
@@ -148,6 +153,7 @@ function selectSet(){
     delMark(name)
     area_click[name] = []
     workMark(name)
+    homeMark(name)
   }
 }
 
@@ -157,53 +163,30 @@ function delMark(name){
   })
 }
 
-function workMark(name) {
+function setMark(data,name,img,filt,cont) {
   t=1000;
-  var heatmapData = [];
-  csvdata.forEach( function(result){
-    if(result.lng == 'NA')
+  data.forEach( function(result){
+    if(result.lng == 'NA' || result.lng.trim() =='')
       return ;
     if(result.section_name+"區" != name) 
       return ;
     if(--t<0) //test
       return ;
-    var na=0
-    for(var key in select){
-      if(result[key] == 'NA'){
-        ++na;
-        continue;
-      }
-      else if(result[key] == '+' || key == 'novalue')
-        continue;
-      else if( key.search("low")>-1) {
-        if(+result[key] < select[key])
-          return ;
-      }
-      else if( key.search("high")>-1){
-        if(+result[key] > select[key])
-          return ;
-      }
-      else
-        console.log(select)
-    }
-    if(na==6 && select['novalue'] == true) // no money
+    if( !filt(result) )
       return ;
 
-    var latlng = new google.maps.LatLng(result.lng, result.lat)
+    var latlng = new google.maps.LatLng(result.lat, result.lng)
     var marker = new google.maps.Marker({
       position: latlng,
       map: map,
-      icon: new google.maps.MarkerImage('./work.svg',
+      icon: new google.maps.MarkerImage(img,
         null, null, null, new google.maps.Size(17,17)),
     });
     area_click[name].push(marker)
     marker.addListener('click', function() {
       var infowindow = new InfoBubble({
         map: map,
-        content: "<div><h3>"+result.title+"</h3>"+
-          "<h4>"+moneyStr(result)+"</h4>" + 
-          "<a target='_blank' href='"+result.URL+"'>518_LINK</a>"+
-          "</div>",
+        content: cont(result),
         position: latlng,
         shadowStyle: 1,
         padding: 10,
@@ -224,6 +207,66 @@ function workMark(name) {
     });
   })
 }
+
+
+function homeMark(name) { setMark(
+  homedata,
+  name,
+  './img/home.svg',
+  function(result){return true},
+  function(result){return "<div><h3>"+result.title+"</h3>"+
+    "<p>"+result.layout+"</p>" + 
+    "<p>"+result.area+"坪</p>" + 
+    "<p>月租 NT"+result.price+"</p>" + 
+    "<a target='_blank' href='"+result.URL+"'>591_LINK</a>"+
+    "</div>"
+  }
+)}
+
+function workMark(name) { setMark(
+  workdata,
+  name,
+  './img/work.svg',
+  function(result){
+    var na=0
+    for(var key in select){
+      if(result[key] == 'NA'){
+        ++na;
+        continue;
+      }
+      else if( key == 'novalue')
+        continue;
+      else if( result[key] == '+'){
+        if( key.search("low")>-1) {
+          if(+result[key.slice(0,-3)+"high"] < select[key])
+            return false;
+        }
+        else{
+          if(+result[key.slice(0,-4)+"low"] < select[key])
+            return false;
+        }
+      }
+      else if( key.search("low")>-1) {
+        if(+result[key] < select[key])
+          return false;
+      }
+      else if( key.search("high")>-1){
+        if(+result[key] > select[key])
+          return false;
+      }
+      else
+        console.log(select)
+    }
+    if(na==6 && select['novalue'] == true) // no money
+      return false;
+    return true;
+  },
+  function(result){ return "<div><h3>"+result.title+"</h3>"+
+    "<h4>"+moneyStr(result)+"</h4>" + 
+    "<a target='_blank' href='"+result.URL+"'>518_LINK</a>"+
+    "</div>"
+  }
+)}
     </script>
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDePj2nW03TgZAQK2G95OQFv3JMGHMfvxo&libraries=visualization&callback=initRead"> </script>
 
