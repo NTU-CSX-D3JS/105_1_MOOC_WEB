@@ -85,11 +85,6 @@ def setMoney(d):
 #header
 fieldnames = ['title','URL','address', 'section_name', 'region_name','lng','lat',"hourlow","hourhigh","daylow","dayhigh","monthlow","monthhigh"]
 
-keys= ['URL', 'Map', '制度', '所需證照', '語文條件', '需求人數', '是否出差', '工作性質', '管理責任', '方言條件', '學歷要求', '可上班日', '內容', '上班地點', '科系限制', '擅長工具', '薪資待遇', '工作技能', '職務類別', '身份類別', '休假制度', '需備駕照', '其他條件', '上班時段', '福利', '工作經驗']
-
-for k in keys:
-    if k not in fieldnames:
-        fieldnames.append(k)
 writer = csv.DictWriter(open("518_Taipei_ok.csv","w"), fieldnames=fieldnames)
 writer.writeheader()
 
@@ -103,9 +98,10 @@ for i in csvdata:
     setSectionname(i)
     setMap(i)
     setMoney(i)
-    del i['']
-    writer.writerow(i)
+    newdata = { key:i[key] for key in fieldnames }
+    writer.writerow(newdata)
 
+exit()
 #show 
 csvdata = csv.DictReader(open("518_Taipei_ok.csv"))
 num = 0 
