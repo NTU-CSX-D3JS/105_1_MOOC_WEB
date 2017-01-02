@@ -25,8 +25,9 @@ html, body {
     <!-- Nav tabs -->
     <div class="sidebar-tabs">
       <ul role="tablist">
-        <li><a href="#filter"      role="tab"><i class="fa fa-filter"   ></i></a></li>
-        <li><a href="./index.html" role="tab"><i class="fa fa-home"     ></i></a></li>
+        <li><a href="#workfilter" role="tab"><i class="fa fa-filter"   ></i></a></li>
+        <li><a href="#homefilter" role="tab"><i class="fa fa-filter"   ></i></a></li>
+        <li><a href="./index.html"role="tab"><i class="fa fa-home"     ></i></a></li>
       </ul>
 
       <ul role="tablist">
@@ -36,7 +37,7 @@ html, body {
 
     <!-- Tab panes -->
     <div class="sidebar-content">
-      <div class="sidebar-pane" id="filter">
+      <div class="sidebar-pane" id="workfilter">
         <h1 class="sidebar-header">
           薪水篩選
           <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
@@ -55,6 +56,22 @@ html, body {
           <!-- be careful for wrong input -->
         </form>
       </div>
+      <div class="sidebar-pane" id="homefilter">
+        <h1 class="sidebar-header">
+          房屋篩選  
+          <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+        </h1>
+        <form id="myselect">
+          <ul>
+            <li>房租下限:<input type="number" id="rentlow"  value=0 ></li>
+            <li>房租上限:<input type="number" id="renthigh" value='2147483647' ></li>
+            <li>坪數下限:<input type="number" id="arealow"   value=0 ></li>
+            <li>坪數上限:<input type="number" id="areahigh"  value='2147483647' ></li>
+            <input type="button" onClick="selectSet()" value="確認修改">
+          </ul>
+          <!-- be careful for wrong input -->
+        </form>
+      </div>
       <div class="sidebar-pane" id="copy">
         <h1 class="sidebar-header">
           Creative Commons
@@ -65,7 +82,7 @@ html, body {
         <img src="./img/home.svg" style="width:100px"/>
         <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
         <p> 全台各鄉鎮區行政區界及範圍 </p>
-        <a href="https://gist-map.motc.gov.tw/Complex/MapTopic" target="_blank">交通部開放資料</a>
+        <a href="https://gist-map.motc.gov.tw/Complex/MapTopic" target="_blank"><img src="http://data.gov.tw/sites/all/themes/execute_responsive_theme/logo.png" alt="" style="width:270px"></a>
         <p> Google map sidebar </p>
         <a href="https://github.com/Turbo87/sidebar-v2" target="_blank"><i class="fa fa-github fa-5x"></i></a>
 
@@ -142,7 +159,8 @@ var t = 100;
 var select = {}
 
 function selectSet(){
-  var name = ['hourlow','hourhigh','daylow','dayhigh','monthlow','monthhigh']
+  var name = ['hourlow','hourhigh','daylow','dayhigh','monthlow','monthhigh',
+    'rentlow','renthigh','arealow','areahigh' ] 
   name.forEach( function(n){
     select[n] = +document.getElementById(n).value
   })
@@ -213,7 +231,17 @@ function homeMark(name) { setMark(
   homedata,
   name,
   './img/home.svg',
-  function(result){return true},
+  function(result){
+    var item=['price','area']
+    for(var i in item){
+      key = item[i]
+      if( select[key+'low'] > +result[key] ) 
+        return false;
+      else  if( select[key+'high'] < +result[key] ) 
+        return false;
+    }
+    return true;
+  },
   function(result){return "<div><h3>"+result.title+"</h3>"+
     "<p>"+result.layout+"</p>" + 
     "<p>"+result.area+"坪</p>" + 
@@ -228,21 +256,20 @@ function workMark(name) { setMark(
   name,
   './img/work.svg',
   function(result){
-    var na=0
-    for(var key in select){
+    var na=0;
+    var item = ['hourlow','hourhigh','daylow','dayhigh','monthlow','monthhigh']
+    for(var i in item){
+      key = item[i]
       if(result[key] == 'NA'){
         ++na;
-        continue;
       }
-      else if( key == 'novalue')
-        continue;
       else if( result[key] == '+'){
         if( key.search("low")>-1) {
           if(+result[key.slice(0,-3)+"high"] < select[key])
             return false;
         }
         else{
-          if(+result[key.slice(0,-4)+"low"] < select[key])
+          if(+result[key.slice(0,-4)+"low"] > select[key])
             return false;
         }
       }
