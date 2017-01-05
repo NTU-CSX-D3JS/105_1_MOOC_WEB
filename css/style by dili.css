@@ -88,14 +88,15 @@ img {
 #header span#mobile-navigation, #header span#mobile-submenu, #header div ul li ul {
 	display: none;
 }
-/*-------------------------------------------------body of home----------------------------------------------------*/
+/*----------------------------------------body-home-styles---------------------------------------*/
 #body {
 	background: url(../images/bg-home.jpg) no-repeat center top;
 	overflow: hidden;
 	padding: 0;
 	position: relative;
-	width: 95%;
-    margin:2px auto;
+	width: 80%;
+	margin-left: :10%;
+	margin-right: 10%;
 }
 #body.home div {
 	background: none;
@@ -131,39 +132,6 @@ img {
 	overflow: hidden;
 	padding: 0;
 	width: 37.4583%;
-}
-#body.home div.header div span a.email {
-	border: 5px solid #000000;
-	color: #000000;
-	display: block;
-	float: left;
-	font-family: Arial;
-	font-size: 20px;
-	font-weight: bold;
-	height: 47px;
-	line-height: 47px;
-	margin: 0;
-	padding: 0;
-	text-align: center;
-	text-transform: uppercase;
-	width: 63.142857142857%;
-}
-#body.home div.header div span a.signup {
-	border: 5px solid #000000;
-	border-left: none;
-	color: #000000;
-	display: block;
-	float: left;
-	font-family: Arial;
-	font-size: 20px;
-	font-weight: bold;
-	height: 47px;
-	line-height: 47px;
-	margin: 0;
-	padding: 0;
-	text-align: center;
-	text-transform: uppercase;
-	width: 32.571428571429%;
 }
 #body.home div.header div img {
 	display: block;
@@ -241,113 +209,6 @@ img {
 	background-color: #ffffff;
 	color: #fb416f;
 }
-/*---------------------------------body of contact----------------------------------------*/
-.bodybackground{
-  height:1000px;
-  width: 1000px;
-  position:absolute;
-  left:50%;
-  margin-left: -500px;
-  background: url(../images/bg-transparent2.png) repeat;
-  margin-bottom:122px;
-}
-.bodybackground h1{
-  background: url(../images/bg-border2.gif) no-repeat center bottom;
-  font-size: 50px;
-  font-weight: normal;
-  line-height:40px;
-  font-family: 'Microsoft JhengHei', Verdana; 
-  color: #FC416F;
-  margin-top: 10px;
-  margin-bottom:10px;
-  text-align: center;
-  text-transform: uppercase;
-  padding-top: 20px;
-  padding-bottom: 20px;  
-}
-.boxoutside {
-  width: 900px;
-  height: 200px;
-  background: url(../images/bg-transparent2.png) repeat;
-  text-align: center;
-  
-  position:absolute;
-  left:50%;
-  margin-left: -450px;
-  padding-top: 10px;
-}
-
-.memberlist {
-  width: 440px;
-  height: 192px;
-  border-radius: 10px;
-  webkit-border-radius: 10px;
-  moz-border-radius: 10px;
-  display: inline-block;
-}
-
-#memberlistpresence {
-  background: #9999FF;
-  box-shadow: 2px 3px 3px #000;
-}
-
-#memberlistabsence {
-  background: url(../images/bg-transparent2.png) repeat;
-}
-.headpic {
-  float:left;
-  position:relative;
-  width:100px;
-  height:100%;
-  padding:30px;
-  box-sizing:border-box;  
-}
-.headpic-img {
-  position:absolute;
-  width:120px;
-  height:120px;
-  border-radius: 50%;
-  -webkit-border-radius: 50%;
-  box-shadow: 0px 0px 0px 8px rgba(0, 0, 0, 0.06);
-  -webkit-box-shadow: 0px 0px 0px 8px rgba(0, 0, 0, 0.06);
-  overflow:hidden;
-  background-size: cover;
-}
-.info {
-  float:left;
-  width:330px;
-  height: 100px;
-  box-sizing:border-box;
-}
-
-.boxoutside > .memberlist > .info > .name{  
-  font-size: 40px;
-  font-family: Tahoma, Helvetica,Microsoft JhengHei;
-  font-color: #FF3333;
-  margin-top:30px;
-}
-.boxoutside > .memberlist > .info > .details{ 
-  font-size: 20px;
-  font-family: Tahoma, Helvetica,Microsoft JhengHei;
-  font-color: #FF3333;  
-}
-
-.boxoutside > .memberlist > .info > .linksbox{
-  width:170px;
-  height: 40px;
-  margin-left: 80px;
-  margin-top: 10px;
-  text-align: center;
-}
-.link {
-	display: inline-block;
-	width: 40px;
-	height: 40px;
-  margin: 2px auto;
-}
-.logos{
-  width:100%;}
-
 /*----------------------------------------body-styles---------------------------------------*/
 #body div {
 	background: url(../images/bg-transparent2.png) repeat;
@@ -355,6 +216,9 @@ img {
 	max-width: 960px;
 	overflow: hidden;
 	padding: 58px 0 4px;
+}
+#body.running div {
+	padding: 58px 0 161px;
 }
 #body div h1 {
 	background: url(../images/bg-border2.gif) no-repeat center bottom;
@@ -578,15 +442,189 @@ img {
 	line-height: 38px;
 	width: 140px;
 }
+#body.contact div img {
+	display: block;
+	margin: 70px auto 37px;
+	padding: 0;
+	width: auto;
+}
+#body.contact div h2 {
+	font-weight: bold;
+	margin: 0 auto 18px;
+	text-transform: uppercase;
+}
+#body.contact div p, #body.contact div a {
+	color: #FFFFFF;
+	display: block;
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: normal;
+	letter-spacing: 0.01em;
+	line-height: 18px;
+	margin: 0 auto 22px;
+	padding: 0;
+	text-align: center;
+	width: 355px;
+}
+#body.contact div p a {
+	color: #FFFFFF;
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: normal;
+	line-height: 48px;
+	margin: 0 auto 37px;
+	padding: 0;
+	text-decoration: underline;
+}
+#body.contact div p a:hover {
+	color: #fc416f;
+}
+#body.contact div h4 {
+	background: url(../images/bg-border1.gif) no-repeat center bottom;
+	color: #FFFFFF;
+	font-family: 'Arial Black';
+	font-size: 30px;
+	font-weight: normal;
+	line-height: 30px;
+	margin: 0;
+	padding: 14px 0 29px;
+	text-align: center;
+	text-transform: uppercase;
+}
+#body.contact div form {
+	display: block;
+	margin: 0 auto;
+	overflow: hidden;
+	padding: 36px 0 0;
+	width: 503px;
+}
+#body.contact div form input {
+	background: none;
+	border: 2px solid #FFFFFF;
+	color: #FFFFFF;
+	display: block;
+	font-family: Arial;
+	font-size: 18px;
+	font-weight: normal;
+	height: 39px;
+	line-height: 43px;
+	margin: 0 0 17px;
+	padding: 0 4px;
+	text-align: center;
+	text-transform: uppercase;
+	width: 491px;
+}
+#body.contact div form textarea {
+	background: none;
+	border: 2px solid #FFFFFF;
+	color: #FFFFFF;
+	display: block;
+	font-family: Arial;
+	font-size: 18px;
+	font-weight: normal;
+	height: 87px;
+	line-height: 24px;
+	margin: 0 0 22px;
+	overflow: auto;
+	padding: 7px 4px 0;
+	resize: none;
+	text-align: center;
+	text-transform: uppercase;
+	width: 491px;
+}
+#body.contact div form input#submit {
+	background: none;
+	border: 2px solid #FFFFFF;
+	color: #FFFFFF;
+	cursor: pointer;
+	display: block;
+	font-family: Arial;
+	font-size: 18px;
+	font-weight: bold;
+	height: 43px;
+	line-height: 43px;
+	margin: 0 auto 16px;
+	padding: 0;
+	text-align: center;
+	text-transform: uppercase;
+	width: 143px;
+}
+#body.contact div form input#submit:hover {
+	background-color: #fb416f;
+	border: none;
+	height: 43px;
+	width: 143px;
+}
+#body.blogsinglepost div img {
+	display: block;
+	float: left;
+	margin: 72px 28px 0 90px;
+	padding: 0;
+	width: auto;
+}
+#body.blogsinglepost div div {
+	background: none;
+	float: left;
+	margin: 76px 0 0;
+	max-width: none;
+	padding: 0 0 349px;
+	width: 522px;
+}
+#body.blogsinglepost div div h1 {
+	background: none;
+	color: #FFFFFF;
+	font-family: Arial;
+	font-size: 25px;
+	font-weight: bold;
+	letter-spacing: 0.03em;
+	line-height: 25px;
+	margin: 0 0 13px;
+	padding: 0;
+	text-align: left;
+	text-transform: uppercase;
+}
+#body.blogsinglepost div div p {
+	color: #FFFFFF;
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: normal;
+	letter-spacing: 0.01em;
+	line-height: 48px;
+	margin: 0 0 48px;
+	padding: 0;
+	text-align: left;
+	width: auto;
+}
+#body.blogsinglepost div div p a {
+	color: #ffffff;
+	font-family: Arial;
+	font-size: 16px;
+	font-weight: normal;
+	line-height: 48px;
+	margin: 0;
+	padding: 0;
+	text-decoration: underline;
+}
+#body.blogsinglepost div div p a:hover {
+	color: #fc416f;
+}
+#body.memberlist div {
+    display: block;
+    
+    color: #ffffff;
+    font-family: Helvetia;
+    font-size: 16px;
+
+}
+/*----------------------------------------members-list----------------------------------------*/
+
 /*----------------------------------------footer-styles---------------------------------------*/
 #footer {
 	background-color: #111111;
-	margin-top: -50px;
+	margin: 0;
 	min-height: 122px;
 	padding: 0;
 	width: 100%;
-	position:absolute; top:100%;
-	
 }
 #footer div {
 	margin: 0 auto;
