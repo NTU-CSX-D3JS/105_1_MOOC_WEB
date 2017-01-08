@@ -41,7 +41,7 @@ setPie = function(name,arr){
 		},
 		"size": {
 			"canvasHeight": 450,
-			"canvasWidth": 620,
+			"canvasWidth": Math.min( $("#pieChart").width()-20 , 620 ),
 			"pieInnerRadius": "64%",
 			"pieOuterRadius": "94%"
 		},

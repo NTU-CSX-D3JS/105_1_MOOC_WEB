@@ -579,11 +579,12 @@ img {
 /*----------------------------------------footer-styles---------------------------------------*/
 #footer {
 	background-color: #111111;
-	margin-top: -50px;
+	margin-top: -10px;
 	min-height: 122px;
 	padding: 0;
 	width: 100%;
-	position:absolute; top:100%;
+	position:absolute; 
+	top:100%;
 	
 }
 #footer div {
@@ -603,12 +604,11 @@ img {
 	padding: 5px 0 0;
 	text-align: left;
 	text-transform: none;
-	width: 400px;
+	width: 100%;
 }
 #footer div .connect {
 	display: block;
 	float: right;
-	height: 32px;
 	margin: 0;
 	overflow: hidden;
 	padding: 0;

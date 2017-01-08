@@ -12,6 +12,12 @@
 	<script src="./js/mobile.js" type="text/javascript"></script>
 	<script src="./lib/d3pie.min.js"></script>
 	<script src="./js/piechart.js"></script>
+	<style>
+#pieChart  svg{
+	display:block;
+	margin: 0 auto;
+}
+	</style>
 </head>
 <body>
 	<div id="page">
@@ -20,10 +26,10 @@
 				<span id="mobile-navigation">&nbsp;</span>
 				<a href="index.html" class="logo"><img src="images/logo.png" alt=""></a>
 				<ul id="menu">
-					<li class="selected">
+					<li>
 						<a href="index.html">Home</a>
 					</li>
-					<li>
+					<li class="selected">
 						<a href="about.html">Statistics</a>
 					</li>
 					<li>
@@ -41,7 +47,7 @@
 		<div id="body">
 			<div>
 				<h1>薪資房價媒合數據</h1>
-						<div id="pieChart"></div>
+					<div id="pieChart" ></div>
 			</div>
 		</div>
 
