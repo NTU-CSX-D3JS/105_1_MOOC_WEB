@@ -14,19 +14,32 @@ var getDistance = function(p1, p2) {
   return d; // returns the distance in meter
 };
 
+var finddata = []
+var findcircle = null
+var circleR = 1000;
+var fakecenter = null
+var listen = null
+
 function radiusChange(){
   circleR = +$("#circleR")[0].value*1000
   if( finddata.length > 0 )
     findStart(fakecenter)
 }
 
-//finding mode
-var finddata = []
-var findcircle = null
-var circleR = 1000;
-var fakecenter = null
 function findStart(center){
-  fakecenter = center
+  if(listen == null){
+    listen = "HI"
+    listen = google.maps.event.addListener(map,'click',function(event){
+      console.log(event)
+      var a= {}
+      a.lng = ""+event.latLng.lng()
+      a.lat = ""+event.latLng.lat()
+      a.all = true
+      findStart(a)
+    })
+  }
+
+
   $("#circlemode").show()
   if(finddata.length > 0){
     delMark(finddata)
@@ -37,20 +50,28 @@ function findStart(center){
   map.data.setMap(null)
   for(var name in area_click)
     delMark(area_click[name])
-  finddata.push(center)
 
   // find 
   var data = []
-  if('area' in center)
+  if( 'all' in center){
+    workMark(data)
+    homeMark(data)
+  }
+  else if('area' in center)
     workMark(data)
   else
     homeMark(data)
 
+  finddata.push(center)
   data.forEach( function(result){
     if( getDistance(result,center) >  circleR)
       return ;
     finddata.push(result)
   })
+  if(finddata.length == 0)
+    return ;
+
+  fakecenter = center
   finddata = setMark(finddata)
   drawCircle(finddata[0])
 }
@@ -58,8 +79,11 @@ function findStart(center){
 function findEnd(){
   map.data.setMap(map)
   delMark(finddata)
-  if(finddata.length > 0)
+  if(finddata.length > 0){
     findcircle.setMap(null)
+    listen.remove()
+    listen = null
+  }
   finddata = []
   refreshMark()
   $("#circlemode").hide()
