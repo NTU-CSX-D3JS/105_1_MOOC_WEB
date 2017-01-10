@@ -1,4 +1,4 @@
-var t = 100;
+var th = 0,tw = 0;
 
 
 function moneyStr(a){
@@ -12,17 +12,17 @@ function delMark(arr){
 }
 
 function setMark(data){
-//  t=1000;
+  th = tw =1000;
   var markers = []
   data.forEach( function(result){
     if(result.lng == "NA" || result.lng.trim() =="" )
       return ;
-//    if(--t<0) //test
-//      return ;
 
     // split
     var img,cont
     if('area' in result){
+      if(--th<0) //test
+        return ;
       img = "./images/home.svg"
       cont = "<div><h3>"+result.title+"</h3>"+
         "<p>"+result.layout+"</p>" + 
@@ -32,6 +32,8 @@ function setMark(data){
         "</div>"
     }
     else{
+      if(--tw<0) //test
+        return ;
       img = './images/work.svg'
       cont =  "<div><h3>"+result.title+"</h3>"+
         "<h4>"+moneyStr(result)+"</h4>" + 
@@ -39,12 +41,12 @@ function setMark(data){
         "</div>"
     }
 
+    // make mark
     var latlng = new google.maps.LatLng(result.lat, result.lng)
     var marker = new google.maps.Marker({
       position: latlng,
       map: map,
-      icon: new google.maps.MarkerImage(img,
-        null, null, null, new google.maps.Size(17,17)),
+      icon: {url:img, scaledSize: new google.maps.Size(17,17), anchor: new google.maps.Point(8, -3)}
     });
     markers.push(marker)
     var infowindow ;
@@ -71,7 +73,8 @@ function setMark(data){
       infowindow.close()
     })
     marker.addListener('click', function() { //mouseover seems annoy
-      findStart(marker,result)
+      findStart(result)
+      console.log(result)
     })
   })
   return markers

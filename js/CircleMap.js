@@ -14,22 +14,30 @@ var getDistance = function(p1, p2) {
   return d; // returns the distance in meter
 };
 
-
+function radiusChange(){
+  circleR = +$("#circleR")[0].value*1000
+  if( finddata.length > 0 )
+    findStart(fakecenter)
+}
 
 //finding mode
 var finddata = []
-function findStart(premarker,center){
-  if(finddata)
+var findcircle = null
+var circleR = 1000;
+var fakecenter = null
+function findStart(center){
+  fakecenter = center
+  $("#circlemode").show()
+  if(finddata.length > 0){
+    delMark(finddata)
+    finddata = []
+    findcircle.setMap(null)
+  }
   //clear
   map.data.setMap(null)
-  for(var name in area_click){
-    area_click[name].forEach( function(marker){
-      if(premarker != marker) {
-        marker.setMap(null);
-        finddata.push(center)
-      }
-    })
-  }
+  for(var name in area_click)
+    delMark(area_click[name])
+  finddata.push(center)
 
   // find 
   var data = []
@@ -39,7 +47,7 @@ function findStart(premarker,center){
     homeMark(data)
 
   data.forEach( function(result){
-    if( getDistance(result,center) >  1000)
+    if( getDistance(result,center) >  circleR)
       return ;
     finddata.push(result)
   })
@@ -50,15 +58,19 @@ function findStart(premarker,center){
 function findEnd(){
   map.data.setMap(map)
   delMark(finddata)
+  if(finddata.length > 0)
+    findcircle.setMap(null)
   finddata = []
   refreshMark()
+  $("#circlemode").hide()
 }
 
 function drawCircle(marker){
   var circle = new google.maps.Circle({
     map: map,
-    radius: 1000,
+    radius: circleR,
     fillColor: '#AA0000'
   });
   circle.bindTo('center', marker, 'position');
+  findcircle = circle
 }

@@ -24,9 +24,21 @@ html, body {
 .js-info-bubble-close{
   width:20px;
 }
+#circlemode {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0px;
+  padding: 10px 20px;
+  z-index: 10;
+  background-color: #6a6666;
+  color:white;
+}
+
     </style>
   </head>
   <body>
+  <button type="button" id="circlemode" onclick="findEnd()"> 互找模式取消 </button>
   <div id="map" class="sidebar-map"></div>
   <div id="sidebar" class="sidebar collapsed">
     <!-- Nav tabs -->
@@ -34,6 +46,7 @@ html, body {
       <ul role="tablist">
         <li><a href="#workfilter" role="tab"><i class="fa fa-filter"   ></i></a></li>
         <li><a href="#homefilter" role="tab"><i class="fa fa-filter"   ></i></a></li>
+        <li><a href="#question"   role="tab"><i class="fa fa-question-circle-o"></i></a></li>
         <li><a href="./index.html"role="tab"><i class="fa fa-home"     ></i></a></li>
       </ul>
 
@@ -79,6 +92,28 @@ html, body {
           <!-- be careful for wrong input -->
         </form>
       </div>
+      <div class="sidebar-pane" id="question">
+        <h1 class="sidebar-header">
+          互找模式         
+          <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+        </h1>
+        <form>
+          半徑: <input type="range" id="circleR" min="1" max="5" value="1">
+          <input type="button" onClick="radiusChange()" value="確認修改">
+        </form>
+        <p>
+        互找模式 為本程式其中一個重要功能<br/>
+簡單來說 <br/>
+用 房子 找 工作<br/>
+用 工作 找 房子
+<br/> <br/>
+點擊房子或工作的圖示<br/>
+你可以看到 以一個半徑為圓的大小<br/>
+而你在這個區域裡面 <br/>
+你可以看到在你的距離裡面的工作或房子<br/>
+趕緊試試
+        </p>
+      </div>
       <div class="sidebar-pane" id="copy">
         <h1 class="sidebar-header">
           Creative Commons
@@ -92,6 +127,9 @@ html, body {
         <a href="https://gist-map.motc.gov.tw/Complex/MapTopic" target="_blank"><img src="http://data.gov.tw/sites/all/themes/execute_responsive_theme/logo.png" alt="" style="width:270px"></a>
         <p> Google map sidebar </p>
         <a href="https://github.com/Turbo87/sidebar-v2" target="_blank"><i class="fa fa-github fa-5x"></i></a>
+        <p> Google map info bubble</p>
+        <a href="https://github.com/googlemaps/js-info-bubble" target="_blank"><i class="fa fa-github fa-5x"></i></a>
+
 
       </div>
     </div>
