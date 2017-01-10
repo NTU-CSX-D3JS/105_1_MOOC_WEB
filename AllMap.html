@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./css/gmaps-sidebar.min.css" />
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script src="./js/mapMark.js"></script>
+    <script src="./js/CircleMap.js"></script>
     <style>
 #map {
   height: 100%;
@@ -110,7 +111,6 @@ function initMap() {
 
 function initRead(){
   var sidebar = $('#sidebar').sidebar();
-  console.log(sidebar)
   selectSet()
   $.get('./data/518_Taipei_ok.csv', function(data) {
     workdata = $.csv.toObjects(data)
@@ -153,14 +153,13 @@ function areaDraw(){
     name = event.feature.f.townname
     if( area_click[name] ){
       map.data.overrideStyle(event.feature, {fillOpacity: 0.2});
-      delMark(name)
+      delMark(area_click[name])
       delete area_click[name]
     }
     else{
       map.data.overrideStyle(event.feature, {fillOpacity: 0.65});
       area_click[name] = []
-      workMark(name)
-      homeMark(name)
+      buildMark(name)
     }
   });
 }
@@ -176,12 +175,7 @@ function selectSet(){
   select['novalue'] = document.getElementById("novalue").checked
 
   // refresh data
-  for(var name in area_click){
-    delMark(name)
-    area_click[name] = []
-    workMark(name)
-    homeMark(name)
-  }
+  refreshMark()
 }
 
 
