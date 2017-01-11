@@ -28,7 +28,7 @@ html, body {
   display: none;
   position: absolute;
   top: 0;
-  right: 0px;
+  left: 50%;
   padding: 10px 20px;
   z-index: 10;
   background-color: #6a6666;
@@ -87,6 +87,27 @@ html, body {
             <li>房租上限:<input type="number" id="pricehigh" value='2147483647' ></li>
             <li>坪數下限:<input type="number" id="arealow"   value=0 ></li>
             <li>坪數上限:<input type="number" id="areahigh"  value='2147483647' ></li>
+
+            <li> 格局
+              <li> <select id="home0">
+                  <option value="*">隨意</option>
+                  <option value="1房">1房</option>
+                  <option value="2房">2房</option>
+                  <option value="3房">3房</option>
+              </select> </li>
+              <li> <select id="home1">
+                  <option value="*">隨意</option>
+                  <option value="1廳">1廳</option>
+                  <option value="2廳">2廳</option>
+                  <option value="3廳">3廳</option>
+              </select> </li>
+              <li> <select id="home2">
+                  <option value="*">隨意</option>
+                  <option value="1衛">1衛</option>
+                  <option value="2衛">2衛</option>
+                  <option value="3衛">3衛</option>
+              </select> </li>
+            </li>
             <input type="button" onClick="selectSet()" value="確認修改">
           </ul>
           <!-- be careful for wrong input -->
@@ -98,17 +119,20 @@ html, body {
           <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
         </h1>
         <form>
-          半徑: <input type="range" id="circleR" min="1" max="5" value="1">
-          <input type="button" onClick="radiusChange()" value="確認修改">
+          半徑: <input type="range" id="circleR" onchange="radiusChange()"
+            min="1" max="5" value="1" step="0.1">
+          <p> <span id="circleRword"></span> Km </p>
         </form>
         <p>
-        互找模式 為本程式其中一個重要功能<br/>
+互找模式 <br/>
+為本程式其中一個重要功能<br/>
 簡單來說 <br/>
 用 房子 找 工作<br/>
 用 工作 找 房子
 <br/> <br/>
 點擊房子或工作的圖示<br/>
-你可以看到 以一個半徑為圓的大小<br/>
+你可以看到 <br/>
+以一個半徑為圓的大小<br/>
 而你在這個區域裡面 <br/>
 你可以看到在你的距離裡面的工作或房子<br/>
 趕緊試試
@@ -124,7 +148,7 @@ html, body {
         <img src="./images/home.svg" style="width:100px"/>
         <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
         <p> 全台各鄉鎮區行政區界及範圍 </p>
-        <a href="https://gist-map.motc.gov.tw/Complex/MapTopic" target="_blank"><img src="http://data.gov.tw/sites/all/themes/execute_responsive_theme/logo.png" alt="" style="width:270px"></a>
+        <a href="https://gist-map.motc.gov.tw/Complex/MapTopic" target="_blank"><img src="https://data.gov.tw/sites/all/themes/execute_responsive_theme/logo.png" alt="" style="width:270px"></a>
         <p> Google map sidebar </p>
         <a href="https://github.com/Turbo87/sidebar-v2" target="_blank"><i class="fa fa-github fa-5x"></i></a>
         <p> Google map info bubble</p>
@@ -150,6 +174,7 @@ function initMap() {
 function initRead(){
   var sidebar = $('#sidebar').sidebar();
   selectSet()
+  $("#circleRword").text( 1 )
   $.get('./data/518_Taipei_ok.csv', function(data) {
     workdata = $.csv.toObjects(data)
     $.get('./data/591_Taipei_ok.csv', function(data) {
@@ -206,14 +231,22 @@ function areaDraw(){
 var select = {}
 function selectSet(){
   var name = ['hourlow','hourhigh','daylow','dayhigh','monthlow','monthhigh',
-    'pricelow','pricehigh','arealow','areahigh' ] 
+    'pricelow','pricehigh','arealow','areahigh']  
   name.forEach( function(n){
     select[n] = +document.getElementById(n).value
   })
+  var name = ['home0','home1','home2']
+  name.forEach( function(n){
+    select[n] = document.getElementById(n).value
+  })
+
   select['novalue'] = document.getElementById("novalue").checked
 
   // refresh data
-  refreshMark()
+  if( finddata.length )
+    findStart(fakecenter)
+  else
+    refreshMark()
 }
 
 

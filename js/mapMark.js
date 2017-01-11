@@ -46,7 +46,7 @@ function setMark(data){
     var marker = new google.maps.Marker({
       position: latlng,
       map: map,
-      icon: {url:img, scaledSize: new google.maps.Size(17,17), anchor: new google.maps.Point(8, -3)}
+      icon: {url:img, scaledSize: new google.maps.Size(17,17), anchor: new google.maps.Point(8, 8)}
     });
     markers.push(marker)
     var infowindow ;
@@ -88,6 +88,14 @@ function homeFilter(result){
       return false;
     else  if( select[key+'high'] < +result[key] ) 
       return false;
+  }
+  var item=['home0','home1','home2']
+  for(var i in item){
+    key = item[i]
+    if( select[key]!='*' && result.layout.search( select[key] ) ==-1)
+    {
+      return false
+    }
   }
   return true;
 }

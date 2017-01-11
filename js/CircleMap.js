@@ -20,7 +20,9 @@ var circleR = 1000;
 var fakecenter = null
 var listen = null
 
+
 function radiusChange(){
+  $("#circleRword").text( $("#circleR")[0].value )
   circleR = +$("#circleR")[0].value*1000
   if( finddata.length > 0 )
     findStart(fakecenter)
